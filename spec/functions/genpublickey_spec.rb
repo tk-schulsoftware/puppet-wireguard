@@ -21,7 +21,7 @@ describe 'wireguard::genpublickey' do
   context 'generates a public key' do
     let(:publickey) { '1234567890abcdef' }
 
-    before do
+    before(:each) do
       allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
       allow(File).to receive(:write).with(public_key_path, publickey)
     end

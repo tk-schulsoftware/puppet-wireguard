@@ -22,7 +22,7 @@ describe 'wireguard::genkey' do
   end
 
   context 'generates a private and public key' do
-    before do
+    before(:each) do
       allow(File).to receive(:writable?).with('/etc/wireguard').and_return(true)
 
       # Privatekey

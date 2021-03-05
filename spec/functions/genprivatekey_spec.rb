@@ -19,7 +19,7 @@ describe 'wireguard::genprivatekey' do
     let(:filename) { '/etc/wireguard/wg0.key' }
     let(:privatekey) { '1234567890abcdef' }
 
-    before do
+    before(:each) do
       allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'genkey']).and_return(privatekey)
       allow(File).to receive(:write).with(filename, privatekey)
     end
