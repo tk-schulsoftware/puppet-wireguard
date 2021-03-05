@@ -32,7 +32,7 @@ describe 'wireguard::genprivatekey' do
     let(:privatekey) { 'abcdef1234567890' }
 
     before(:each) do
-      allow(File).to receive(:exists?).with(filename).and_return(true)
+      allow(File).to receive(:exist?).with(filename).and_return(true)
       allow(File).to receive(:read).and_call_original
       allow(File).to receive(:read).with(filename).and_return(privatekey)
     end

@@ -33,7 +33,7 @@ describe 'wireguard::genpublickey' do
     let(:publickey) { 'abcdef1234567890' }
 
     before(:each) do
-      allow(File).to receive(:exists?).with(public_key_path).and_return(true)
+      allow(File).to receive(:exist?).with(public_key_path).and_return(true)
       allow(File).to receive(:read).and_call_original
       allow(File).to receive(:read).with(public_key_path).and_return(publickey)
     end
