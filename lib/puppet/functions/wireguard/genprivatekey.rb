@@ -19,7 +19,7 @@ Puppet::Functions.create_function(:'wireguard::genprivatekey') do
   end
 
   def genprivatekey(path)
-    if File.exists?(path)
+    if File.exist?(path)
       private_key = File.read(path).strip
     else
       private_key = Puppet::Util::Execution.execute(

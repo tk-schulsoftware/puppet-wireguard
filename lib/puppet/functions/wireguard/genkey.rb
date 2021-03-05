@@ -14,7 +14,7 @@ Puppet::Functions.create_function(:'wireguard::genkey') do
     return_type 'Array'
   end
 
-  def genkey(name, path='/etc/wireguard')
+  def genkey(name, path = '/etc/wireguard')
     private_key_path = File.join(path, "#{name}.key")
     public_key_path = File.join(path, "#{name}.pub")
     [private_key_path, public_key_path].each do |p|

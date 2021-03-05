@@ -7,7 +7,6 @@ describe 'wireguard::genkey' do
   let(:privatekey) { 'privatekey' }
   let(:publickey) { 'publickey' }
 
-
   context 'fails on invalid params' do
     it { is_expected.not_to eq(nil) }
     [
@@ -31,7 +30,7 @@ describe 'wireguard::genkey' do
       allow(File).to receive(:write).with(private_key_path, privatekey)
 
       # Publickey
-      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], {:stdinfile => private_key_path}).and_return(publickey)
+      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], { stdinfile: private_key_path }).and_return(publickey)
       allow(File).to receive(:write).with(public_key_path, publickey)
     end
 
