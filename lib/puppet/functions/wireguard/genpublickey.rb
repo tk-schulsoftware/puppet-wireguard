@@ -22,7 +22,7 @@ Puppet::Functions.create_function(:'wireguard::genpublickey') do
     else
       public_key = Puppet::Util::Execution.execute(
         ['/usr/bin/wg', 'pubkey'],
-        { stdinfile: private_key_path },
+        stdinfile: private_key_path,
       )
       File.write(public_key_path, public_key)
     end

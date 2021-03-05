@@ -31,7 +31,7 @@ describe 'wireguard::genprivatekey' do
     let(:filename) { '/etc/wireguard/wg0.key' }
     let(:privatekey) { 'abcdef1234567890' }
 
-    before do
+    before(:each) do
       allow(File).to receive(:exists?).with(filename).and_return(true)
       allow(File).to receive(:read).and_call_original
       allow(File).to receive(:read).with(filename).and_return(privatekey)

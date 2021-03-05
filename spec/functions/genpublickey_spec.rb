@@ -22,7 +22,7 @@ describe 'wireguard::genpublickey' do
     let(:publickey) { '1234567890abcdef' }
 
     before do
-      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], { stdinfile: private_key_path }).and_return(publickey)
+      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
       allow(File).to receive(:write).with(public_key_path, publickey)
     end
 
@@ -32,7 +32,7 @@ describe 'wireguard::genpublickey' do
   context 'uses existing public key file' do
     let(:publickey) { 'abcdef1234567890' }
 
-    before do
+    before(:each) do
       allow(File).to receive(:exists?).with(public_key_path).and_return(true)
       allow(File).to receive(:read).and_call_original
       allow(File).to receive(:read).with(public_key_path).and_return(publickey)

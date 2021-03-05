@@ -30,7 +30,7 @@ describe 'wireguard::genkey' do
       allow(File).to receive(:write).with(private_key_path, privatekey)
 
       # Publickey
-      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], { stdinfile: private_key_path }).and_return(publickey)
+      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
       allow(File).to receive(:write).with(public_key_path, publickey)
     end
 
@@ -38,7 +38,7 @@ describe 'wireguard::genkey' do
   end
 
   context 'uses existing private and public key file' do
-    before do
+    before(:each) do
       allow(File).to receive(:writable?).with('/etc/wireguard').and_return(true)
       allow(File).to receive(:read).and_call_original
 
