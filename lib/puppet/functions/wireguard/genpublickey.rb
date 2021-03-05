@@ -10,13 +10,13 @@ Puppet::Functions.create_function(:'wireguard::genpublickey') do
   #                            '/etc/wireguard/wg0.pub'
   #                           ) => 'gNaMjIpR7LKg019iktKJC74GX/MD3Y35Wo+WRNRQZxA='
   #
-  dispatch :genprivkey do
+  dispatch :genpublickey do
     required_param 'String', :private_key_path
     required_param 'String', :public_key_path
     return_type 'String'
   end
 
-  def genprivkey(private_key_path, public_key_path)
+  def genpublickey(private_key_path, public_key_path)
     if File.exist?(public_key_path)
       public_key = File.read(public_key_path).strip
     else
