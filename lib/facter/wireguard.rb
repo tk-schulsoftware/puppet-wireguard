@@ -12,6 +12,7 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
     port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', interface, 'listen-port'])
     wireguard[interface]['public_key'] = public_key
     wireguard[interface]['endpoint'] = Facter.value(:fqdn) + ':' + port
+    wireguard[interface]['local_ip'] = Facter.value(':ipaddress_' + interface)
   end
 end
 
