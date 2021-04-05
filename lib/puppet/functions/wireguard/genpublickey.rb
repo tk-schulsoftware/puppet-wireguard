@@ -17,11 +17,15 @@ Puppet::Functions.create_function(:'wireguard::genpublickey') do
   end
 
   def genpublickey(private_key_path, public_key_path)
-    if File.exist?(public_key_path)
-      public_key = File.read(public_key_path).strip
+    if File.exist?('/usr/bin/wg')
+      if File.exist?(public_key_path)
+        public_key = File.read(public_key_path).strip
+      else
+        public_key = Puppet::Util::Execution.execute(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path)
+        File.write(public_key_path, public_key)
+      end
     else
-      public_key = Puppet::Util::Execution.execute(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path)
-      File.write(public_key_path, public_key)
+      public_key = ''
     end
 
     public_key
