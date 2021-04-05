@@ -13,9 +13,13 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
     if !port
       port = '51820' # wireguard standard-port
     end
+    local_ip = Facter.value(':ipaddress_' + interface)
+    if !local_ip
+      local_ip = '0.0.0.0'
+    end
     wireguard[interface]['public_key'] = public_key
     wireguard[interface]['endpoint'] = Facter.value(:fqdn) + ':' + port
-    wireguard[interface]['local_ip'] = Facter.value(':ipaddress_' + interface) + '/32'
+    wireguard[interface]['local_ip'] =  local_ip + '/32'
   end
 end
 
