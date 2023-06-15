@@ -33,7 +33,7 @@ MTU = <%= $mtu %>
 <%- if $dns { -%>
 DNS = <%= $dns %>
 <% } -%>
-<%- if $table { -%>
+<%- if $table == 'off' { -%>
 Table = <%= $table %>
 <% } -%>
 <%- if $preup { -%>
