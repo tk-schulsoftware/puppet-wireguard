@@ -4,6 +4,7 @@
       Integer[1,65535]                $listen_port,
       Optional[Integer[1,9202]]       $mtu,
       Optional[String]                $dns,
+      Optional[String]                $table,
       Optional[Variant[Array,String]] $preup,
       Optional[Variant[Array,String]] $postup,
       Optional[Variant[Array,String]] $predown,
@@ -31,6 +32,9 @@ MTU = <%= $mtu %>
 <% } -%>
 <%- if $dns { -%>
 DNS = <%= $dns %>
+<% } -%>
+<%- if $table { -%>
+Table = <%= $table %>
 <% } -%>
 <%- if $preup { -%>
   <%- if $preup =~ Array { -%>

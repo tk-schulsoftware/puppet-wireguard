@@ -227,6 +227,14 @@ Set MTU for the wireguard interface
 
 Default value: `undef`
 
+##### `table`
+
+Data type: `Enum['on','off']`
+
+Set Table on or off for the wireguard interface
+
+Default value: `on`
+
 ##### `preup`
 
 Data type: `Optional[Variant[Array,String]]`
