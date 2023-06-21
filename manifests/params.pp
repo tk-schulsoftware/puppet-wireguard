@@ -17,9 +17,15 @@ class wireguard::params {
       $repo_url       = ''
     }
     'Debian': {
-      $manage_repo    = true
-      $package_name   = ['wireguard', 'wireguard-dkms', 'wireguard-tools']
-      $repo_url       = 'http://deb.debian.org/debian/'
+      if $facts['os']['distro']['codename'] != 'bookworm' {
+        $manage_repo    = true
+        $package_name   = ['wireguard', 'wireguard-dkms', 'wireguard-tools']
+        $repo_url       = 'http://deb.debian.org/debian/'
+      } else {
+        $manage_repo    = true
+        $package_name   = ['wireguard', 'wireguard-tools']
+        $repo_url       = 'http://deb.debian.org/debian/'
+      }
     }
     default: {
       warning("Unsupported OS family, couldn't configure package automatically")
