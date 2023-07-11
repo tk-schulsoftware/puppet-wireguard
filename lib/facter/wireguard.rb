@@ -9,8 +9,18 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
     wireguard[interface] = {}
 
     public_key = Puppet::Util::Execution.execute(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).strip
-    port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', interface, 'listen-port']).strip || '51820'
-    local_ip = Facter.value(:networking)['interfaces'][interface]['ip'].strip || '0.0.0.0'
+    
+    begin #... process, may raise an exception
+      port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', interface, 'listen-port']).strip
+    rescue => e #... error handler
+      port = '51820'
+    end
+
+    begin #... process, may raise an exception
+      local_ip = Facter.value(:networking)['interfaces'][interface]['ip'].strip
+    rescue => e #... error handler
+      local_ip = '0.0.0.0'
+    end
 
     wireguard[interface]['public_key'] = public_key
     wireguard[interface]['endpoint'] = Facter.value(:fqdn) + ':' + port
