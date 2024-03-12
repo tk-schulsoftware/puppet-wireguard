@@ -27,7 +27,16 @@ Puppet::Functions.create_function(:'wireguard::genprivatekey') do
         File.write(private_key_path, private_key)
       end
     else
-      private_key = ''
+      if File.exist?('/usr/local/bin/wg')
+        if File.exist?(private_key_path)
+          private_key = File.read(private_key_path).strip
+        else
+          private_key = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'genkey'])
+          File.write(private_key_path, private_key)
+        end
+      else
+        private_key = ''
+      end
     end
 
     private_key
