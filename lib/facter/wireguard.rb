@@ -4,7 +4,15 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
 
   interface = File.basename(filename).gsub('.conf', '')
   private_key_path = '/etc/wireguard/' + interface + '.key'
-  my_interface = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', 'interfaces']).strip
+  begin #... subprocess, may raise an exception
+    if File.exist?('/usr/bin/wg')
+      my_interface = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', 'interfaces']).strip
+    else
+      my_interface = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', 'interfaces']).strip
+    end
+  rescue => e #... suberror handler
+    my_interface = 'wg0'
+  end
 
   if File.file?(private_key_path)
     wireguard[interface] = {}
