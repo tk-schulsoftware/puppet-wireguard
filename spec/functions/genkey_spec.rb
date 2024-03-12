@@ -25,13 +25,23 @@ describe 'wireguard::genkey' do
     before(:each) do
       allow(File).to receive(:writable?).with('/etc/wireguard').and_return(true)
 
-      # Privatekey
-      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'genkey']).and_return(privatekey)
-      allow(File).to receive(:write).with(private_key_path, privatekey)
+      if File.exist?('/usr/bin/wg')
+        # Privatekey
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'genkey']).and_return(privatekey)
+        allow(File).to receive(:write).with(private_key_path, privatekey)
 
-      # Publickey
-      allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
-      allow(File).to receive(:write).with(public_key_path, publickey)
+        # Publickey
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
+        allow(File).to receive(:write).with(public_key_path, publickey)
+      else
+        # Privatekey
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/local/bin/wg', 'genkey']).and_return(privatekey)
+        allow(File).to receive(:write).with(private_key_path, privatekey)
+
+        # Publickey
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/local/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
+        allow(File).to receive(:write).with(public_key_path, publickey)
+      end
     end
 
     it { is_expected.to run.with_params(name).and_return([privatekey, publickey]) }

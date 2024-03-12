@@ -8,10 +8,18 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
   if File.file?(private_key_path)
     wireguard[interface] = {}
 
-    public_key = Puppet::Util::Execution.execute(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).strip
+    if File.exist?('/usr/bin/wg')
+      public_key = Puppet::Util::Execution.execute(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).strip
+    else
+      public_key = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'pubkey'], stdinfile: private_key_path).strip
+    end
     
     begin #... process, may raise an exception
-      port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', interface, 'listen-port']).strip
+      if File.exist?('/usr/bin/wg')
+        port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', interface, 'listen-port']).strip
+      else
+        port = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', interface, 'listen-port']).strip
+      end
     rescue => e #... error handler
       port = '51820'
     end
