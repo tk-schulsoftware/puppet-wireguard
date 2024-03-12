@@ -21,11 +21,20 @@ class wireguard::config (
       purge   => true,
     }
   } else {
-    file {$config_dir:
-      ensure => 'directory',
-      mode   => $config_dir_mode,
-      owner  => 'root',
-      group  => 'root',
+    if ($facts['os']['family'] == 'Darwin') {
+      file {$config_dir:
+        ensure => 'directory',
+        mode   => $config_dir_mode,
+        owner  => 'root',
+        group  => 'wheel',
+      }
+    } else {
+      file {$config_dir:
+        ensure => 'directory',
+        mode   => $config_dir_mode,
+        owner  => 'root',
+        group  => 'root',
+      }
     }
   }
 }
