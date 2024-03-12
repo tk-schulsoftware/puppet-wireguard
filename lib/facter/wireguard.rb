@@ -4,6 +4,7 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
 
   interface = File.basename(filename).gsub('.conf', '')
   private_key_path = '/etc/wireguard/' + interface + '.key'
+  my_interface = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', 'interfaces']).strip
 
   if File.file?(private_key_path)
     wireguard[interface] = {}
@@ -25,13 +26,25 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
         port = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', interface, 'listen-port']).strip
       end
     rescue => e #... error handler
-      port = '51820'
+      begin #... subprocess, may raise an exception
+        if File.exist?('/usr/bin/wg')
+          port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', my_interface, 'listen-port']).strip
+        else
+          port = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', my_interface, 'listen-port']).strip
+        end
+      rescue => e #... suberror handler
+        port = '51820'
+      end
     end
 
     begin #... process, may raise an exception
       local_ip = Facter.value(:networking)['interfaces'][interface]['ip'].strip
     rescue => e #... error handler
-      local_ip = '0.0.0.0'
+      begin #... subprocess, may raise an exception
+        local_ip = Facter.value(:networking)['interfaces'][my_interface]['ip'].strip
+      rescue => e #... suberror handler
+        local_ip = '0.0.0.0'
+      end
     end
 
     wireguard[interface]['public_key'] = public_key
