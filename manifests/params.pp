@@ -27,6 +27,11 @@ class wireguard::params {
         $repo_url       = 'http://deb.debian.org/debian/'
       }
     }
+    'Darwin': {
+      $manage_repo    = false
+      $package_name   = ['wireguard-tools']
+      $repo_url       = ''
+    }
     default: {
       warning("Unsupported OS family, couldn't configure package automatically")
     }
