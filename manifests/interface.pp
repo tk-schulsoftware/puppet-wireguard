@@ -93,29 +93,40 @@ define wireguard::interface (
     $content = inline_epp(file("${module_name}/interface.conf.epp"), $config)
   }
 
-  file {"${config_dir}/${name}.conf":
-    ensure    => $ensure,
-    mode      => '0600',
-    owner     => 'root',
-    group     => 'root',
-    show_diff => false,
-    content   => $content,
-    notify    => Service["wg-quick@${name}.service"],
-  }
+  if ($facts['os']['family'] == 'Darwin') {
+    file { "${config_dir}/${name}.conf":
+      ensure    => $ensure,
+      mode      => '0600',
+      owner     => 'root',
+      group     => 'wheel',
+      show_diff => false,
+      content   => $content,
+    }
+  } else {
+    file { "${config_dir}/${name}.conf":
+      ensure    => $ensure,
+      mode      => '0600',
+      owner     => 'root',
+      group     => 'root',
+      show_diff => false,
+      content   => $content,
+      notify    => Service["wg-quick@${name}.service"],
+    }
 
-  $_service_ensure = $ensure ? {
-    'absent' => 'stopped',
-    default  => 'running',
-  }
-  $_service_enable = $ensure ? {
-    'absent' => false,
-    default  => true,
-  }
+    $_service_ensure = $ensure ? {
+      'absent' => 'stopped',
+      default  => 'running',
+    }
+    $_service_enable = $ensure ? {
+      'absent' => false,
+      default  => true,
+    }
 
-  service {"wg-quick@${name}.service":
-    ensure   => $_service_ensure,
-    provider => 'systemd',
-    enable   => $_service_enable,
-    require  => File["${config_dir}/${name}.conf"],
+    service { "wg-quick@${name}.service":
+      ensure   => $_service_ensure,
+      provider => 'systemd',
+      enable   => $_service_enable,
+      require  => File["${config_dir}/${name}.conf"],
+    }
   }
 }
