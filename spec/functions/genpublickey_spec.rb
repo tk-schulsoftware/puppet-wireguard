@@ -25,7 +25,7 @@ describe 'wireguard::genpublickey' do
       if File.exist?('/usr/bin/wg')
         allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
       else
-        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/local/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/opt/local/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
       end
       allow(File).to receive(:write).with(public_key_path, publickey)
     end

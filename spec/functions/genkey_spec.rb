@@ -35,11 +35,11 @@ describe 'wireguard::genkey' do
         allow(File).to receive(:write).with(public_key_path, publickey)
       else
         # Privatekey
-        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/local/bin/wg', 'genkey']).and_return(privatekey)
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/opt/local/bin/wg', 'genkey']).and_return(privatekey)
         allow(File).to receive(:write).with(private_key_path, privatekey)
 
         # Publickey
-        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/local/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/opt/local/bin/wg', 'pubkey'], stdinfile: private_key_path).and_return(publickey)
         allow(File).to receive(:write).with(public_key_path, publickey)
       end
     end

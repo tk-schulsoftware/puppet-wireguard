@@ -23,7 +23,7 @@ describe 'wireguard::genprivatekey' do
       if File.exist?('/usr/bin/wg')
         allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/bin/wg', 'genkey']).and_return(privatekey)
       else
-        allow(Puppet::Util::Execution).to receive(:execute).with(['/usr/local/bin/wg', 'genkey']).and_return(privatekey)
+        allow(Puppet::Util::Execution).to receive(:execute).with(['/opt/local/bin/wg', 'genkey']).and_return(privatekey)
       end
       allow(File).to receive(:write).with(filename, privatekey)
     end

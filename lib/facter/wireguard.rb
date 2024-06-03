@@ -8,7 +8,7 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
     if File.exist?('/usr/bin/wg')
       my_interface = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', 'interfaces']).strip
     else
-      my_interface = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', 'interfaces']).strip
+      my_interface = Puppet::Util::Execution.execute(['/opt/local/bin/wg', 'show', 'interfaces']).strip
     end
   rescue => e #... suberror handler
     my_interface = 'wg0'
@@ -21,7 +21,7 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
       if File.exist?('/usr/bin/wg')
         public_key = Puppet::Util::Execution.execute(['/usr/bin/wg', 'pubkey'], stdinfile: private_key_path).strip
       else
-        public_key = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'pubkey'], stdinfile: private_key_path).strip
+        public_key = Puppet::Util::Execution.execute(['/opt/local/bin/wg', 'pubkey'], stdinfile: private_key_path).strip
       end
     rescue => e #... error handler
       public_key = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA='
@@ -31,14 +31,14 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
       if File.exist?('/usr/bin/wg')
         port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', interface, 'listen-port']).strip
       else
-        port = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', interface, 'listen-port']).strip
+        port = Puppet::Util::Execution.execute(['/opt/local/bin/wg', 'show', interface, 'listen-port']).strip
       end
     rescue => e #... error handler
       begin #... subprocess, may raise an exception
         if File.exist?('/usr/bin/wg')
           port = Puppet::Util::Execution.execute(['/usr/bin/wg', 'show', my_interface, 'listen-port']).strip
         else
-          port = Puppet::Util::Execution.execute(['/usr/local/bin/wg', 'show', my_interface, 'listen-port']).strip
+          port = Puppet::Util::Execution.execute(['/opt/local/bin/wg', 'show', my_interface, 'listen-port']).strip
         end
       rescue => e #... suberror handler
         port = '51820'
