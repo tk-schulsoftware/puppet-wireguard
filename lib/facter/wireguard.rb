@@ -52,7 +52,20 @@ Dir.glob('/etc/wireguard/*.conf') do |filename|
         local_ip = Facter.value(:networking)['interfaces'][my_interface]['ip'].strip
       rescue => e #... suberror handler
         begin #... subprocess, may raise an exception
-          local_ip = Puppet::Util::Execution.execute(["/usr/bin/awk -F ' = |/' '/Address = / {print $2}'", filename]).strip
+          address_line = ''
+          if File.exist?(filename)
+            File.foreach(filename) do |line|
+              if line.include?('Address')
+                address_line = line
+                break
+              end
+            end
+          end
+          if address_line != ''
+            local_ip = address_line.split('=')[1].strip.split('/')[0]
+          else
+            local_ip = '0.0.0.0'
+          end
         rescue => e #... suberror handler
           local_ip = '0.0.0.0'
         end
